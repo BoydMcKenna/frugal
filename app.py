@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import re
 import random
 
+
+
 app = Flask(__name__)
+CORS(app)
 
 class SmartShoppingAgent:
     def __init__(self, location="Ann Arbor, MI", radius=20):
