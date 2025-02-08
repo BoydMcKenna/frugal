@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Shopping Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🛍️ Smart Shopping Assistant</h1>
+        <p>Enter the products you want to buy, and we’ll find the best deals for you!</p>
+        
+        <textarea id="shoppingList" placeholder="Enter each product on a new line..."></textarea>
+        
+        <button onclick="searchDeals()">Find Deals</button>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function searchDeals() {
+            const shoppingList = document.getElementById("shoppingList").value
+                .split("\n")
+                .map(item => item.trim())
+                .filter(item => item !== "");
+
+            if (shoppingList.length === 0) {
+                document.getElementById("results").innerHTML = "<p style='color: red;'>⚠️ Please enter at least one product.</p>";
+                return;
+            }
+
+            document.getElementById("results").innerHTML = "<p>🔍 Searching for the best deals...</p>";
+
+            try {
+                const response = await fetch("https://your-api-url.com/search", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ shopping_list: shoppingList })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch");
+
+                const data = await response.json();
+                let output = "<h2>🛒 Best Shopping Plan:</h2><ul>";
+
+                data.shopping_plan.forEach(item => {
+                    output += `<li>
+                        Buy <strong>${item.product}</strong> at <strong>${item.store}</strong> for <strong>$${item.price}</strong> 
+                        <a href="${item.link}" target="_blank">[Buy Now]</a>
+                    </li>`;
+                });
+
+                output += `</ul><h3>💰 Total Cost: <strong>$${data.total_cost.toFixed(2)}</strong></h3>`;
+                document.getElementById("results").innerHTML = output;
+
+            } catch (error) {
+                document.getElementById("results").innerHTML = "<p style='color: red;'>⚠️ Error retrieving data. Please try again later.</p>";
+            }
+        }
+    </script>
+</body>
+</html>
