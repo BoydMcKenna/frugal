@@ -8,7 +8,7 @@ A simple web app that finds the best local deals for your shopping list by compa
 - Links to buy from Walmart, Best Buy, Target, and Amazon.
 - Easy to use and completely **free**.
 
-## 📢 How to Use
+## How to Use
 1. **Enter product names** in the text box.
 2. **Click "Find Deals"** to get the best shopping plan.
 3. **See the results**, including the best store and a link to buy.
