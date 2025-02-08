@@ -14,7 +14,7 @@ A simple web app that finds the best local deals for your shopping list by compa
 3. **See the results**, including the best store and a link to buy.
 
 ## 🔥 Live Demo
-➡ **[Click Here to Use the App](https://yourusername.github.io/shopping-assistant/)**
+➡ **[Click Here to Use the App](https://boydmckenna.github.io/frugal/)**
 
 ## 🛠️ Technologies Used
 - **HTML** (Frontend)
