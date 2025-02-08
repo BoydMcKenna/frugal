@@ -27,11 +27,11 @@ def search():
         return jsonify({"error": "No products provided"}), 400
 
     shopping_plan = []
-    
+
     for product in shopping_list:
         try:
-            # Query OpenAI for best price insights
-            response = openai.ChatCompletion.create(
+            # Corrected OpenAI API Call (New Format)
+            response = openai.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are a shopping assistant that finds the best prices."},
@@ -40,16 +40,18 @@ def search():
                 temperature=0.7,
                 max_tokens=100
             )
-            
-            price_info = response["choices"][0]["message"]["content"]
+
+            # Extract the response text
+            price_info = response.choices[0].message.content
             shopping_plan.append({"product": product, "price_info": price_info})
 
         except Exception as e:
-            shopping_plan.append({"product": product, "error": str(e)})
+            return jsonify({"error": f"Failed to retrieve data: {str(e)}"}), 500
 
     return jsonify({"shopping_plan": shopping_plan})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
 
