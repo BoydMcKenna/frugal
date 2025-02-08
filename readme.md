@@ -2,7 +2,7 @@
 
 A simple web app that finds the best local deals for your shopping list by comparing prices across different stores.
 
-## 🚀 Features
+## Features
 - Find the cheapest prices for products.
 - Get a shopping plan that minimizes total cost.
 - Links to buy from Walmart, Best Buy, Target, and Amazon.
@@ -13,17 +13,17 @@ A simple web app that finds the best local deals for your shopping list by compa
 2. **Click "Find Deals"** to get the best shopping plan.
 3. **See the results**, including the best store and a link to buy.
 
-## 🔥 Live Demo
+##  Live Demo
 ➡ **[Click Here to Use the App](https://BoydMckenna.github.io/frugal/)**
 
-## 🛠️ Technologies Used
+##  Technologies Used
 - **HTML** (Frontend)
 - **CSS** (Styling)
 - **JavaScript** (Client-side logic)
 - **Flask** (Backend API)
 - **GitHub Pages** (Hosting)
 
-## 🎯 Future Enhancements
+## Future Enhancements
 - ✅ Add more stores like Costco, Newegg, eBay.
 - ✅ Include coupons and promo codes.
 - ✅ Allow price range filtering.
