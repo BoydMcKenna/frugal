@@ -33,7 +33,7 @@
             document.getElementById("results").innerHTML = "<p>🔍 Searching for the best deals...</p>";
 
             try {
-                const response = await fetch("https://your-api-url.com/search", {
+                const response = await fetch("https://frugal.onrender.com/search", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ shopping_list: shoppingList })
