@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-import web
 import re
+import random
 
 app = Flask(__name__)
 
@@ -11,23 +11,17 @@ class SmartShoppingAgent:
         self.stores = ["Walmart", "Best Buy", "Target", "Amazon"]
 
     def search_product_prices(self, product):
-        """Search for the product across multiple stores and find the best price."""
-        best_price = float('inf')
-        best_store = None
-        best_link = None
+        """Simulate price lookup (Replace this with a real API later)"""
+        dummy_prices = {
+            "Walmart": random.uniform(10, 500),
+            "Best Buy": random.uniform(10, 500),
+            "Target": random.uniform(10, 500),
+            "Amazon": random.uniform(10, 500)
+        }
 
-        for store in self.stores:
-            query = f"{product} price at {store} near {self.location}"
-            results = web.search(query)
-
-            for result in results:
-                price_match = re.search(r"\$\d+(?:\.\d+)?", result.get("snippet", ""))
-                if price_match:
-                    price = float(price_match.group().replace("$", ""))
-                    if price < best_price:
-                        best_price = price
-                        best_store = store
-                        best_link = result['link']
+        best_store = min(dummy_prices, key=dummy_prices.get)
+        best_price = round(dummy_prices[best_store], 2)
+        best_link = f"https://{best_store.lower()}.com/search?q={product.replace(' ', '+')}"
 
         return {"product": product, "store": best_store, "price": best_price, "link": best_link}
 
@@ -41,7 +35,7 @@ class SmartShoppingAgent:
             shopping_plan.append(best_deal)
             total_cost += best_deal["price"]
 
-        return {"shopping_plan": shopping_plan, "total_cost": total_cost}
+        return {"shopping_plan": shopping_plan, "total_cost": round(total_cost, 2)}
 
 shopping_agent = SmartShoppingAgent()
 
@@ -57,3 +51,4 @@ def search():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
