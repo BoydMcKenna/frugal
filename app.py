@@ -1,58 +1,55 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-import re
-import random
+import openai
+import os
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-
+# Initialize Flask app
 app = Flask(__name__)
-CORS(app)
 
-class SmartShoppingAgent:
-    def __init__(self, location="Ann Arbor, MI", radius=20):
-        self.location = location
-        self.radius = radius
-        self.stores = ["Walmart", "Best Buy", "Target", "Amazon"]
+# Set OpenAI API key
+openai.api_key = OPENAI_API_KEY
 
-    def search_product_prices(self, product):
-        """Simulate price lookup (Replace this with a real API later)"""
-        dummy_prices = {
-            "Walmart": random.uniform(10, 500),
-            "Best Buy": random.uniform(10, 500),
-            "Target": random.uniform(10, 500),
-            "Amazon": random.uniform(10, 500)
-        }
-
-        best_store = min(dummy_prices, key=dummy_prices.get)
-        best_price = round(dummy_prices[best_store], 2)
-        best_link = f"https://{best_store.lower()}.com/search?q={product.replace(' ', '+')}"
-
-        return {"product": product, "store": best_store, "price": best_price, "link": best_link}
-
-    def find_best_shopping_plan(self, shopping_list):
-        """Finds the best stores to minimize total cost for the given shopping list."""
-        shopping_plan = []
-        total_cost = 0
-
-        for product in shopping_list:
-            best_deal = self.search_product_prices(product)
-            shopping_plan.append(best_deal)
-            total_cost += best_deal["price"]
-
-        return {"shopping_plan": shopping_plan, "total_cost": round(total_cost, 2)}
-
-shopping_agent = SmartShoppingAgent()
+@app.route("/", methods=["GET"])
+def home():
+    return "✅ Smart Shopping Assistant API is running!", 200
 
 @app.route("/search", methods=["POST"])
 def search():
+    """Handles user shopping list and queries OpenAI for price comparisons."""
     data = request.json
     shopping_list = data.get("shopping_list", [])
+
     if not shopping_list:
         return jsonify({"error": "No products provided"}), 400
+
+    shopping_plan = []
     
-    result = shopping_agent.find_best_shopping_plan(shopping_list)
-    return jsonify(result)
+    for product in shopping_list:
+        try:
+            # Query OpenAI for best price insights
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a shopping assistant that finds the best prices."},
+                    {"role": "user", "content": f"Find the best prices for {product} from Walmart, Amazon, and Best Buy."}
+                ],
+                temperature=0.7,
+                max_tokens=100
+            )
+            
+            price_info = response["choices"][0]["message"]["content"]
+            shopping_plan.append({"product": product, "price_info": price_info})
+
+        except Exception as e:
+            shopping_plan.append({"product": product, "error": str(e)})
+
+    return jsonify({"shopping_plan": shopping_plan})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
